@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
-.root {
-    background-color: #2b2b2b;
-}   
+input[type="checkbox"] {
+    box-sizing: border-box;
+    padding: 0;
+    accent-color: #170b2a;
+  }
+input[type="checkbox"]:not(:checked){opacity:0.5;}

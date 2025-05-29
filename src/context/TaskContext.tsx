@@ -1,5 +1,5 @@
-import React, { createContext, useState, useContext } from 'react';
-
+import React, { createContext, useState, useContext, useEffect } from 'react';
+import useLocalStorage from '../hooks/useLocalStorage';
 type filterType = "All" | "Completed" | "Non-Completed"
 
 
@@ -32,7 +32,7 @@ interface TaskContextType {
 
 const TaskContext = createContext<TaskContextType | undefined>(undefined);
 
-// eslint-disable-next-line react-refresh/only-export-components
+// eslint-disable-next-line 
 export const useTaskContext = () => {
   const context = useContext(TaskContext);
   if (!context) {
@@ -46,8 +46,18 @@ interface TaskProviderProps {
 }
 
 export const TaskProvider: React.FC<TaskProviderProps> = ({ children }) => {
-  const [tasks, setTasks] = useState<TaskType[]>([]);
+  const {setItem, getItem} = useLocalStorage('tasks')
+  const stored = getItem();
+
+const initialTasks: TaskType[] = Array.isArray(stored) ? stored : [];
+  const [tasks, setTasks] = useState<TaskType[]>(initialTasks);
   const [filtered, setFiltered] = useState<filterType>("All")
+  
+
+useEffect(() => {
+  setItem(tasks)
+}, [setItem, tasks])
+
 
    const handleAddTask = () => {
     setTasks(prevTasks => {
@@ -66,7 +76,9 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({ children }) => {
           isEditing: false
         })),
         newTask
+        
       ];
+
     });
     
   };
