@@ -22,7 +22,7 @@ function Footer() {
             </a>
           </div>
           <p className="footer-copyright text-gray-500 dark:text-gray-400 text-sm">
-            © {currentYear} Made with ❤️ by Abdo
+            © {currentYear} Made by Abdo
           </p>
         </div>
       </div>
