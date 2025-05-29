@@ -1,21 +1,34 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useContext } from 'react';
 
-// Define the Task type with 'completed' property as per the memory
+type filterType = "All" | "Completed" | "Non-Completed"
+
+
 export type TaskType = {
-  task: string,
+  taskName: string,
   id: string,
   completed: boolean,
-  description: string
+  description: string,
+  priority: 'High' | 'Normal' | 'Low',
+  isEditing: boolean
 };
 
 interface TaskContextType {
   tasks: TaskType[];
+  filtered: filterType;
+  handlePriority: (id: string, newPrio: 'High' | 'Normal' | 'Low') => void;
+  handleDeleteAllTasks: () => void;
+  handleEndEdit: (id:string) => void;
+  handleStartEdit: (id:string) => void;
   handleAddTask: () => void;
-  handleChangeSpecificTask: (id: string, newValue: string) => void;
+  handleEditTaskName: (id: string, newValue: string) => void;
   handleCompleteTask: (id: string, complete: boolean) => void;
   handleDeleteTask: (id: string) => void;
   handleEditDescription: (id: string, newDescription: string) => void;
+  setFiltered: (filter: filterType) => void;
+  handleEndTaskAll: () => void;
 }
+
+
 
 const TaskContext = createContext<TaskContextType | undefined>(undefined);
 
@@ -34,32 +47,48 @@ interface TaskProviderProps {
 
 export const TaskProvider: React.FC<TaskProviderProps> = ({ children }) => {
   const [tasks, setTasks] = useState<TaskType[]>([]);
+  const [filtered, setFiltered] = useState<filterType>("All")
 
-  const handleAddTask = () => {
-    const newTask = {
-      task: 'New Task',
-      description: '',
-      id: crypto.randomUUID(),
-      completed: false,
-    };
-
-    setTasks([...tasks, newTask]);
+   const handleAddTask = () => {
+    setTasks(prevTasks => {
+      const newTask: TaskType = {
+        taskName: `Task #${prevTasks.length + 1}`,
+        description: '',
+        id: crypto.randomUUID(),
+        isEditing: true,
+        completed: false,
+        priority: 'Normal'
+      };
+    
+      return [
+        ...prevTasks.map(task => ({
+          ...task,
+          isEditing: false
+        })),
+        newTask
+      ];
+    });
+    
   };
-
-  useEffect(() => {
-    console.log(tasks);
-  }, [tasks]);
-
-  const handleChangeSpecificTask = (id: string, newValue: string) => {
-    setTasks(tasks.map(task => 
+  
+  const handleEditDescription = (id: string, newDescription: string) => {
+    setTasks(prevTasks => prevTasks.map(task => 
       task.id === id 
-        ? { ...task, task: newValue } 
+        ? { ...task, description: newDescription } 
+        : task
+    ));
+  };
+  
+  const handleEditTaskName = (id: string, newValue: string) => {
+    setTasks(prevTasks => prevTasks.map(task => 
+      task.id === id 
+        ? { ...task, taskName: newValue } 
         : task
     ));
   };
 
   const handleCompleteTask = (id: string, complete: boolean) => {
-    setTasks(tasks.map(task => 
+    setTasks(prevTasks => prevTasks.map(task => 
       task.id === id 
         ? { ...task, completed: complete } 
         : task
@@ -67,21 +96,57 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({ children }) => {
   };
 
   const handleDeleteTask = (id: string) => {
-    setTasks(tasks.filter(task => task.id !== id));
+    setTasks(prevTasks => prevTasks.filter(task => task.id !== id));
   };
 
-  const handleEditDescription = (id: string, newDescription: string) => {
-    setTasks(tasks.map(task => 
-      task.id === id 
-        ? { ...task, description: newDescription } 
+  const handleStartEdit = (id: string) => {
+    setTasks(prevTasks => prevTasks.map(task =>
+      task.id === id
+        ? { ...task, isEditing: true }
+        : task
+    ));
+  };
+  
+
+  const handleEndEdit = (id: string) => {
+    setTasks(prevTasks => prevTasks.map(task =>
+      task.id === id
+        ? { ...task, isEditing: false }
         : task
     ));
   };
 
+  const handleEndTaskAll = () => {
+    setTasks(prevTasks => prevTasks.map(task => {
+      return {...task, isEditing: false}
+    }))
+  }
+
+  const handleDeleteAllTasks = () => {
+    setTasks([])
+  }
+
+  const handlePriority = (id: string, newPrio: 'High' | 'Normal' | 'Low') => {
+    console.log("handlePriority called with:", id, newPrio);
+    setTasks(prevTasks => {
+      return prevTasks.map(task =>
+        task.id === id ? { ...task, priority: newPrio } : task
+      );
+    });
+  };
+  
   const value = {
+    handlePriority,
+    handleDeleteAllTasks,
+    handleStartEdit,
+    handleEndEdit,
+    handleEndTaskAll,
+    filtered,
+    setFiltered,
     tasks,
     handleAddTask,
-    handleChangeSpecificTask,
+    handleEditTaskName,
+
     handleCompleteTask,
     handleDeleteTask,
     handleEditDescription,

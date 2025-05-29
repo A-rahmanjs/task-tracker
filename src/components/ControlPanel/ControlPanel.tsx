@@ -2,22 +2,30 @@
 import Task from '../Task/Task'
 import { useTaskContext } from '../../context/TaskContext'
 
+
 function ControlPanel() {
-  // Get tasks and handlers from context
-  const { tasks } = useTaskContext();
-    
+  const { tasks, filtered } = useTaskContext();
+  const filteredTasks = tasks.filter(task => {
+    if (filtered === "Completed") return task.completed;
+    if (filtered === "Non-Completed") return !task.completed;
+    return true;
+  });
+
+  
   return (
-    <div className="bg-gray-50 p-6 rounded-lg shadow-md">
-      <form className="space-y-4">
+    <div 
+      className="rounded-lg p-5 space-y-1 overflow-hidden w-full h-full bg-gray-50 dark:bg-gray-800 transition-colors duration-200" 
+      
+    >
+      {tasks.length > 0 ? (
         <div className="space-y-2">
-          {tasks.map((task) => (
-            <Task 
-              key={task.id} 
-              task={task}
-            />
+          {[...filteredTasks].reverse().map(task => (
+            <Task key={task.id} task={task} />
           ))}
         </div>
-      </form>
+      ) : (
+        <p className="text-center text-gray-400 dark:text-gray-500">No tasks yet</p>
+      )}
     </div>
   ) 
 }
