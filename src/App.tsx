@@ -3,7 +3,7 @@ import Header from './components/Header/Header'
 import ControlPanel from './components/ControlPanel/ControlPanel';
 import SideBar from './components/SideBar/SideBar';
 import { TaskProvider } from './context/TaskContext';
-
+import Footer from './components/Footer/Footer';
 
 function App() {
   return (
@@ -14,6 +14,7 @@ function App() {
             <SideBar/>
             <ControlPanel />
           </div>
+          <Footer />
         </div>
       </TaskProvider>
   )

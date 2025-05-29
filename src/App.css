@@ -46,6 +46,15 @@
   .priority-selector {
     width: 100%;
   }
+  
+  .app-footer {
+    padding: 1rem 0;
+    margin-top: 3rem;
+  }
+  
+  .footer-title {
+    font-size: 1.2rem;
+  }
 }
 
 
@@ -134,4 +143,12 @@
     width: 100%;
   }
   
+  /* Footer mobile styles */
+  .app-footer {
+    padding-bottom: 1rem;
+  }
+  
+  .footer-social {
+    margin-bottom: 0.75rem;
+  }
 }
