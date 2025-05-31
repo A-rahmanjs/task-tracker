@@ -18,10 +18,10 @@ function Header() {
           onClick={() => {
             handleAddTask()
           }}
-          className="add-task-btn px-4 py-2 rounded-md bg-blue-500 text-white hover:bg-blue-600 active:bg-blue-700 transition-all duration-200 flex items-center space-x-2 active:scale-95 hover:cursor-pointer"
+          className="add-task-btn px-4 justify-center py-2 rounded-md bg-blue-500 text-white hover:bg-blue-600 active:bg-blue-700 transition-all duration-200 flex items-center space-x-2 active:scale-95 hover:cursor-pointer"
         >
+          <span className='text-center'>Add Task</span>
           <Plus size={18} />
-          <span>Add Task</span>
         </button>
       </div>
     </nav>
