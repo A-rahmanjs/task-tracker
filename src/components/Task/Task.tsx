@@ -1,13 +1,11 @@
-import React, { useState, type FormEvent } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Save, Settings, Delete, Smile, Meh, AlertCircle } from 'react-feather';
 import { useTaskContext } from '../../context/TaskContext';
-
 import type { TaskType } from '../../context/TaskContext';
 
 type TaskProps = {
   task: TaskType
 };
-
 
 function Task({ task }: TaskProps) {
   const {
@@ -30,19 +28,18 @@ function Task({ task }: TaskProps) {
 
   } = useTaskContext();
 
-  
-  
   const [localTaskName, setLocalTaskName] = useState(taskName);
   const [localDescription, setLocalDescription] = useState(description);
   const [localPriority, setLocalPriority] = useState<'High' | 'Normal' | 'Low'>(priority)
-  const [checked, setChecked] = useState<boolean>(completed);
-  const ref = React.useRef<HTMLInputElement | null>(null);
+  const [localCompleted, setLocalCompleted] = useState<boolean>(completed);
+  const ref = useRef<HTMLInputElement | null>(null);
 
-  React.useEffect(() => {
+
+useEffect(() => {
     ref.current?.focus()
   }, [isEditing])
 
-  React.useEffect(() => {
+useEffect(() => {
     function handleEsc(e: KeyboardEvent) {
       if (e.key === "Escape") {
         setLocalTaskName(taskName); // Reset unsaved task name
@@ -65,7 +62,7 @@ function Task({ task }: TaskProps) {
 
   if (!isEditing) {
     return (
-      <form onSubmit={(e: FormEvent<HTMLFormElement>) => {
+      <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
       }} className="task-item-container p-2">
         <div className={`task-item ${completed ? 'dark:bg-green-900/30 bg-green-100' : 'dark:bg-gray-700 bg-white'} shadow-md rounded-lg p-4 transition-colors duration-200`}>
@@ -74,15 +71,15 @@ function Task({ task }: TaskProps) {
               <div className="flex items-center">
                 <input
                   type="checkbox"
-                  checked={checked}
+                  checked={localCompleted}
                   disabled={localTaskName.length <= 0}
                   onChange={(e) => {
-                    setChecked(e.target.checked);
+                    setLocalCompleted(e.target.checked);
                     handleCompleteTask(id, e.target.checked);
                   }}
                   className="w-5 h-5 mr-3 mt-1 accent-blue-500 cursor-pointer flex-shrink-0"
                 />
-                <p className={` flex-1 font-bold text-lg ${checked ? 'line-through text-gray-400 dark:text-gray-500' : 'text-gray-800 dark:text-gray-100' } ${priority === "High" ? 'dark:text-red-500/70' : priority === "Normal" ? "dark:text-yellow-500" : 'dark:text-green-500'}` }>
+                <p className={` flex-1 font-bold text-lg ${localCompleted ? 'line-through text-gray-400 dark:text-gray-500' : 'text-gray-800 dark:text-gray-100' } ${priority === "High" ? 'dark:text-red-500/70' : priority === "Normal" ? "dark:text-yellow-500" : 'dark:text-green-500'}` }>
                   {localTaskName.length > 0 ? localTaskName : <span className="text-gray-400 dark:text-gray-500">Unnamed Task</span>}
                 </p>
               </div>
@@ -90,7 +87,7 @@ function Task({ task }: TaskProps) {
                 {localTaskName.trim() !== "" ? (
                   <div 
                     title={localDescription} 
-                    className={`cursor-default whitespace-normal text-sm ${checked ? 'line-through text-gray-400 dark:text-gray-500' : 'text-gray-500 dark:text-gray-400'}`}
+                    className={`cursor-default whitespace-normal text-sm ${localCompleted ? 'line-through text-gray-400 dark:text-gray-500' : 'text-gray-500 dark:text-gray-400'}`}
                   >
                     {localDescription.trim() || 'No description'}
                   </div>
@@ -146,7 +143,7 @@ function Task({ task }: TaskProps) {
   }
 
   return (
-    <form onSubmit={(e: FormEvent<HTMLFormElement>) => {
+    <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
       handleEditTaskName(id, localTaskName);
       handleEditDescription(id, localDescription);
       handlePriority(id, localPriority)
@@ -162,10 +159,10 @@ function Task({ task }: TaskProps) {
           <div className="task-name-input-container flex items-center space-x-4">
             <input
               type="checkbox"
-              checked={checked}
+              checked={localCompleted}
               disabled={taskName.length <= 0}
               onChange={(e) => {
-                setChecked(e.target.checked);
+                setLocalCompleted(e.target.checked);
                 handleCompleteTask(id, e.target.checked);
               }}
               className="w-5 h-5 accent-blue-500 cursor-pointer flex-shrink-0"

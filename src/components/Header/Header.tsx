@@ -5,7 +5,7 @@ import { useTaskContext } from '../../context/TaskContext'
 
 
 function Header() {
-  const { handleAddTask} = useTaskContext();
+  const { handleAddTask } = useTaskContext();
 
 
   return (
@@ -14,11 +14,9 @@ function Header() {
         <h1 className='text-2xl font-bold text-gray-900 dark:text-white'>TASK TRACKER</h1>
       </div>
       <div className="app-controls flex items-center space-x-4">
-
         <button
           onClick={() => {
             handleAddTask()
-
           }}
           className="add-task-btn px-4 py-2 rounded-md bg-blue-500 text-white hover:bg-blue-600 active:bg-blue-700 transition-all duration-200 flex items-center space-x-2 active:scale-95 hover:cursor-pointer"
         >

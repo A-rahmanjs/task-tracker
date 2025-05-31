@@ -1,19 +1,26 @@
 import { useTaskContext } from '../../context/TaskContext';
 import React from 'react';
 
-type select = 'All' | 'Completed' | 'Non-Completed';
+
 
 function SideBar() {
-    const { setFiltered, tasks, handleDeleteAllTasks } = useTaskContext();
+
+    const { 
+            setFiltered, 
+            tasks, 
+            handleDeleteAllTasks, 
+            setSelected, 
+            selected 
+        } = useTaskContext();
  
-    const [selected, setSelected] = React.useState<select>("All");
+    
 
     React.useEffect(() => {
         if (tasks.length === 0) {
             setSelected("All");
             setFiltered("All");
         }
-    }, [tasks.length, setFiltered]);
+    }, [tasks.length, setFiltered, setSelected]);
 
     return (
         <div className="sidebar-container">
@@ -75,8 +82,8 @@ function SideBar() {
                             setSelected("All");
                         }}
                         disabled={tasks.length === 0}
-                        className={`delete-all-btn w-full px-4 py-2 rounded-md text-white bg-red-600 hover:bg-red-700 transition-colors ${
-                            tasks.length === 0 ? 'opacity-50 cursor-not-allowed' : ''
+                        className={`delete-all-btn w-full px-4 py-2 rounded-md text-white bg-red-600/70 hover:bg-red-700/70 transition-colors ${
+                            tasks.length === 0 ? 'opacity-50 cursor-not-allowed dark:bg-white dark:text-black hover:bg-white hover:text-black' : ''
                         }`}
                     >
                         Delete All Tasks

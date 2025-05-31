@@ -10,7 +10,7 @@ function App() {
       <TaskProvider>
         <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200">
           <Header />
-          <div className="min-h-[calc(100vh-16rem)] sidebar-controlpanel-container grid grid-cols-[1fr_6fr] gap-4 p-4">
+          <div className="min-h-[calc(100vh-17.5rem)] sidebar-controlpanel-container grid grid-cols-[1fr_6fr] gap-4 p-4">
             <SideBar/>
             <ControlPanel />
           </div>
