@@ -6,7 +6,3 @@ React, Typescript and Tailwind
 -responsive design
 -fully functional
 
-
-```
-
-```
